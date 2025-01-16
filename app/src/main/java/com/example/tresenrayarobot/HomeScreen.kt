@@ -19,33 +19,103 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun HomeScreen(){
+fun HomeScreen() {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
-    ){
+        verticalArrangement = Arrangement.SpaceAround
+    ) {
         Text(
             text = "Tres en ratlla",
             fontSize = 30.sp,
-            color = Color.Gray,
+            color = Color.DarkGray,
         )
 
-    }
-    Spacer(modifier = Modifier.height(40.dp))
-    Box{
-        Column(){
-            Row (){
-                Box(modifier = Modifier.height(20.dp).width(20.dp).background(Color.Blue)){
+
+        Spacer(modifier = Modifier.height(40.dp))
+
+        Column() {
+            Row() {
+                Box(
+                    modifier = Modifier
+                        .height(20.dp)
+                        .width(20.dp)
+                        .background(Color.Blue)
+                ) {
+
+                }
+                Box(
+                    modifier = Modifier
+                        .height(20.dp)
+                        .width(20.dp)
+                        .background(Color.Blue)
+                ) {
+
+                }
+                Box(
+                    modifier = Modifier
+                        .height(20.dp)
+                        .width(20.dp)
+                        .background(Color.Blue)
+                ) {
 
                 }
             }
-            Row (){
+            Row() {
+                Box(
+                    modifier = Modifier
+                        .height(20.dp)
+                        .width(20.dp)
+                        .background(Color.Blue)
+                ) {
+
+                }
+                Box(
+                    modifier = Modifier
+                        .height(20.dp)
+                        .width(20.dp)
+                        .background(Color.Blue)
+                ) {
+
+                }
+                Box(
+                    modifier = Modifier
+                        .height(20.dp)
+                        .width(20.dp)
+                        .background(Color.Blue)
+                ) {
+
+                }
 
             }
-            Row (){
+            Row() {
+                Box(
+                    modifier = Modifier
+                        .height(20.dp)
+                        .width(20.dp)
+                        .background(Color.Blue)
+                ) {
+
+                }
+                Box(
+                    modifier = Modifier
+                        .height(20.dp)
+                        .width(20.dp)
+                        .background(Color.Blue)
+                ) {
+
+                }
+                Box(
+                    modifier = Modifier
+                        .height(20.dp)
+                        .width(20.dp)
+                        .background(Color.Blue)
+                ) {
+
+                }
 
             }
         }
     }
+
 }
