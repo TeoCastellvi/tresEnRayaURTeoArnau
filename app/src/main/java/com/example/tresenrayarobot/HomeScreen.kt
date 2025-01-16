@@ -1,111 +1,123 @@
 package com.example.tresenrayarobot
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
 fun HomeScreen() {
+
+    val boardState = remember {
+        List(3) { MutableList(3) { mutableStateOf(R.drawable.blanc) } }
+    }
+
     Column(
         modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally, // Centra la columna horizontalmente
-        verticalArrangement = Arrangement.Center // Centra el contenido verticalmente
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         Text(
             text = "Tres en ratlla",
             fontSize = 50.sp,
-            color = Color.DarkGray,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
         )
-        Spacer(modifier = Modifier.height(116.dp))
 
-        Column(
+        Spacer(modifier = Modifier.size(116.dp))
+
+        Box(
             modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .size(240.dp)
+                .border(5.dp, Color.Black)
         ) {
-            // Fila 1
-            Row(
-                modifier = Modifier.fillMaxWidth(0.7f),
-                horizontalArrangement = Arrangement.SpaceBetween
+            Column(
+                verticalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.size(240.dp)
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(80.dp)
-                        .background(Color.Blue)
-                )
-                Box(
-                    modifier = Modifier
-                        .size(80.dp)
-                        .background(Color.Blue)
-                )
-                Box(
-                    modifier = Modifier
-                        .size(80.dp)
-                        .background(Color.Blue)
-                )
-            }
-
-            // Fila 2
-            Row(
-                modifier = Modifier.fillMaxWidth(0.7f),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(80.dp)
-                        .background(Color.Blue)
-                )
-                Box(
-                    modifier = Modifier
-                        .size(80.dp)
-                        .background(Color.Blue)
-                )
-                Box(
-                    modifier = Modifier
-                        .size(80.dp)
-                        .background(Color.Blue)
-                )
-            }
-
-            // Fila 3
-            Row(
-                modifier = Modifier.fillMaxWidth(0.7f),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(80.dp)
-                        .background(Color.Blue)
-                )
-                Box(
-                    modifier = Modifier
-                        .size(80.dp)
-                        .background(Color.Blue)
-                )
-                Box(
-                    modifier = Modifier
-                        .size(80.dp)
-                        .background(Color.Blue)
-                )
+                for (rowIndex in 0..2) {
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        for (colIndex in 0..2) {
+                            GameCell(
+                                currentImage = boardState[rowIndex][colIndex],
+                                onCellClick = {
+                                    boardState[rowIndex][colIndex].value =
+                                        when (boardState[rowIndex][colIndex].value) {
+                                            R.drawable.blanc -> R.drawable.creu
+                                            R.drawable.creu -> R.drawable.rodona
+                                            R.drawable.rodona -> R.drawable.blanc
+                                            else -> R.drawable.blanc
+                                        }
+                                },
+                                isBordered = true,
+                                isBottomBorder = rowIndex < 2,
+                                isRightBorder = colIndex < 2
+                            )
+                        }
+                    }
+                }
             }
         }
     }
+}
+
+@Composable
+fun GameCell(
+    currentImage: MutableState<Int>,
+    onCellClick: () -> Unit,
+    isBordered: Boolean = false,
+    isBottomBorder: Boolean = false,
+    isRightBorder: Boolean = false
+) {
+    Image(
+        painter = painterResource(id = currentImage.value),
+        contentDescription = "Casilla del juego",
+        modifier = Modifier
+            .size(80.dp)
+            .clickable { onCellClick() }
+            .border(
+                width = 3.dp,
+                color = Color.Black,
+                shape = RectangleShape
+            )
+            .let { baseModifier ->
+
+                var updatedModifier = baseModifier
+                if (isBottomBorder) {
+                    updatedModifier = updatedModifier.border(
+                        width = 3.dp,
+                        color = Color.Black,
+                        shape = RectangleShape
+                    )
+                }
+                if (isRightBorder) {
+                    updatedModifier = updatedModifier.border(
+                        width = 3.dp,
+                        color = Color.Black,
+                        shape = RectangleShape
+                    )
+                }
+                updatedModifier
+            }
+    )
 }
