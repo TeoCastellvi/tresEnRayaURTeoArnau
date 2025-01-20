@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun HomeScreen() {
 
-    val turno by remember { mutableStateOf(true) }
+    var turno by remember { mutableStateOf(true) }
     val img = if (turno) {
         R.drawable.mando
     } else {
@@ -49,6 +49,15 @@ fun HomeScreen() {
         Text(
             text = "Tres en ratlla",
             fontSize = 50.sp,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+        Spacer(modifier = Modifier.size(40.dp))
+        Image(painter = painterResource(id = img), contentDescription = null)
+        Spacer(modifier = Modifier.size(5.dp))
+
+        Text(
+            text = if (!turno) "Es el torn del robot" else "Es el teu torn",
+            fontSize = 25.sp,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
 
@@ -80,6 +89,11 @@ fun HomeScreen() {
                             GameCell(
                                 currentImage = boardState[rowIndex][colIndex],
                                 onCellClick = {
+                                    if(turno == true){
+                                        turno = false
+                                    }else{
+                                        turno = true
+                                    }
                                     boardState[rowIndex][colIndex].value =
                                         when (boardState[rowIndex][colIndex].value) {
                                             R.drawable.blanc -> R.drawable.creu
