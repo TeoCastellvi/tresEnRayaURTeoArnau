@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -143,7 +144,7 @@ fun HomeScreen() {
 
         Spacer(modifier = Modifier.size(20.dp))
 
-        androidx.compose.material3.Button(
+        Button(
             onClick = {
                 for (rowIndex in 0..2) {
                     for (colIndex in 0..2) {
