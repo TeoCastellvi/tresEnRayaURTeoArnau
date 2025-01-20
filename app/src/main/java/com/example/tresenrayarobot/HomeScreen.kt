@@ -166,6 +166,9 @@ fun HomeScreen() {
         ) {
             Text(text = "Reiniciar partida", fontSize = 20.sp)
         }
+        Button(onClick = {socket.pedirPosicionActual()}) {
+            Text(socket.posicionActual)
+        }
     }
 }
 

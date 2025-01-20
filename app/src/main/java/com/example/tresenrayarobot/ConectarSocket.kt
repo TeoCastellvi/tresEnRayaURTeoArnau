@@ -10,11 +10,11 @@ class ConectarSocket {
     val serverSocket = ServerSocket(port)
     val clientSocket = serverSocket.accept()
     val output = PrintWriter(clientSocket.getOutputStream(), true)
+    var posicionActual=""
 
-    fun pedirPosicionActual(): String {
+    fun pedirPosicionActual() {
         val input = BufferedReader(InputStreamReader(clientSocket.getInputStream(), "utf8"))
-        val actualPose: String = input.readLine()
-        return "Esta es mi posicion actual: $actualPose"
+        posicionActual= input.readLine()
     }
 
     fun enviarPosicion(x: Int, y: Int) {
