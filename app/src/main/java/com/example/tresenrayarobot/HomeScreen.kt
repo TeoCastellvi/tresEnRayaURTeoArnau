@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -150,7 +151,7 @@ fun HomeScreen() {
         Spacer(modifier = Modifier.size(20.dp))
 
         // Botó per reiniciar el joc
-        androidx.compose.material3.Button(
+        Button(
             onClick = {
                 // Reinicia el tauler i el guanyador
                 for (rowIndex in 0..2) {
