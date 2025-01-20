@@ -28,14 +28,12 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun HomeScreen() {
-
     var turno by remember { mutableStateOf(true) }
     val img = if (turno) {
         R.drawable.mando
     } else {
         R.drawable.robot
     }
-
 
     val boardState = remember {
         List(3) { MutableList(3) { mutableStateOf(R.drawable.blanc) } }
@@ -62,15 +60,8 @@ fun HomeScreen() {
         )
 
         Spacer(modifier = Modifier.size(50.dp))
-        Row(modifier = Modifier
-            .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ){
 
-        }
-        Spacer(modifier = Modifier.size(50.dp))
-
+        // Taulell de joc
         Box(
             modifier = Modifier
                 .size(240.dp)
@@ -89,18 +80,18 @@ fun HomeScreen() {
                             GameCell(
                                 currentImage = boardState[rowIndex][colIndex],
                                 onCellClick = {
-                                    if(turno == true){
-                                        turno = false
-                                    }else{
-                                        turno = true
-                                    }
-                                    boardState[rowIndex][colIndex].value =
-                                        when (boardState[rowIndex][colIndex].value) {
-                                            R.drawable.blanc -> R.drawable.creu
-                                            R.drawable.creu -> R.drawable.rodona
-                                            R.drawable.rodona -> R.drawable.blanc
-                                            else -> R.drawable.blanc
+                                    // Comprova si la casella està buida abans de fer el canvi
+                                    if (boardState[rowIndex][colIndex].value == R.drawable.blanc) {
+                                        // Alterna entre creu i rodona
+                                        boardState[rowIndex][colIndex].value = if (turno) {
+                                            R.drawable.creu
+                                        } else {
+                                            R.drawable.rodona
                                         }
+
+                                        // Alterna el torn
+                                        turno = !turno
+                                    }
                                 },
                                 isBordered = true,
                                 isBottomBorder = rowIndex < 2,
@@ -110,6 +101,24 @@ fun HomeScreen() {
                     }
                 }
             }
+        }
+
+        Spacer(modifier = Modifier.size(20.dp))
+
+        // Botón para reiniciar el juego
+        androidx.compose.material3.Button(
+            onClick = {
+                // Reinicia el estado del juego
+                for (rowIndex in 0..2) {
+                    for (colIndex in 0..2) {
+                        boardState[rowIndex][colIndex].value = R.drawable.blanc
+                    }
+                }
+                turno = true  // Reseteamos el turno a la primera persona
+            },
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        ) {
+            Text(text = "Reiniciar partida", fontSize = 20.sp)
         }
     }
 }
