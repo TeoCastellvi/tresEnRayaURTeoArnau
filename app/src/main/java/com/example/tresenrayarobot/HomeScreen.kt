@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun HomeScreen() {
+    var socket=ConectarSocket()
     var turno by remember { mutableStateOf(true) }
     val img = if (turno) {
         R.drawable.mando
