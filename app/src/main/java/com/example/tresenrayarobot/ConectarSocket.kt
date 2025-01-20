@@ -7,27 +7,23 @@ import java.net.ServerSocket
 
 class ConectarSocket {
     val port = 5858
-    // Obrir el servidor
     val serverSocket = ServerSocket(port)
-
-
-    // Obrir la porta a clients
     val clientSocket = serverSocket.accept()
     val output = PrintWriter(clientSocket.getOutputStream(), true)
 
-    // Llegir el que diu el robot
-
-    fun pedirPosicionActual():String{
-        val input = BufferedReader(InputStreamReader(clientSocket.getInputStream(),"utf8"))
+    fun pedirPosicionActual(): String {
+        val input = BufferedReader(InputStreamReader(clientSocket.getInputStream(), "utf8"))
         val actualPose: String = input.readLine()
         return "Esta es mi posicion actual: $actualPose"
     }
 
+    fun enviarPosicion(x: Int, y: Int) {
+        val posicio = "Posicio: $x,$y"
+        output.println(posicio)
+    }
 
-    // actual pose to final pose
-
-    //Tancar el server
-    fun cerrarSocket(){
+    fun cerrarSocket() {
+        clientSocket.close()
         serverSocket.close()
     }
 }
