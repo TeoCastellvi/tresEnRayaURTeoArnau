@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -29,9 +28,9 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun HomeScreen() {
-    var socket=ConectarSocket()
+    var socket = ConectarSocket()  // Crear instància de la connexió amb el robot
     var turno by remember { mutableStateOf(true) }
-    var winner by remember { mutableStateOf<Int?>(null) } // Variable per guardar el guanyador
+    var winner by remember { mutableStateOf<Int?>(null) }
     val img = if (turno) {
         R.drawable.mando
     } else {
@@ -44,7 +43,7 @@ fun HomeScreen() {
 
     // Funció per comprovar el guanyador
     fun checkWinner(): Int? {
-        // Comprovem les files horitzontals
+        // Comprovem les files horitzontals, verticals i diagonals (com abans)
         for (row in 0..2) {
             if (boardState[row][0].value != R.drawable.blanc &&
                 boardState[row][0].value == boardState[row][1].value &&
@@ -53,7 +52,6 @@ fun HomeScreen() {
             }
         }
 
-        // Comprovem les columnes verticals
         for (col in 0..2) {
             if (boardState[0][col].value != R.drawable.blanc &&
                 boardState[0][col].value == boardState[1][col].value &&
@@ -62,7 +60,6 @@ fun HomeScreen() {
             }
         }
 
-        // Comprovem les diagonals
         if (boardState[0][0].value != R.drawable.blanc &&
             boardState[0][0].value == boardState[1][1].value &&
             boardState[1][1].value == boardState[2][2].value) {
@@ -71,11 +68,14 @@ fun HomeScreen() {
         if (boardState[0][2].value != R.drawable.blanc &&
             boardState[0][2].value == boardState[1][1].value &&
             boardState[1][1].value == boardState[2][0].value) {
-            return boardState[0][2].value // Guanyador
+            return boardState[0][2].value
         }
 
-        // Si no hi ha guanyador, retornem null
         return null
+    }
+
+    fun enviarPosicioAlRobot(row: Int, col: Int) {
+        socket.enviarPosicion(row, col)
     }
 
     Column(
@@ -123,12 +123,17 @@ fun HomeScreen() {
                                 currentImage = boardState[rowIndex][colIndex],
                                 onCellClick = {
                                     if (winner == null && boardState[rowIndex][colIndex].value == R.drawable.blanc) {
+                                        // Actualitza la casella
                                         boardState[rowIndex][colIndex].value = if (turno) {
                                             R.drawable.creu
                                         } else {
                                             R.drawable.rodona
                                         }
+                                        // Envia la posició seleccionada al robot
+                                        enviarPosicioAlRobot(rowIndex, colIndex)
+                                        // Comprova si hi ha guanyador
                                         winner = checkWinner()
+                                        // Canvia el torn
                                         turno = !turno
                                     }
                                 },
@@ -144,8 +149,10 @@ fun HomeScreen() {
 
         Spacer(modifier = Modifier.size(20.dp))
 
-        Button(
+        // Botó per reiniciar el joc
+        androidx.compose.material3.Button(
             onClick = {
+                // Reinicia el tauler i el guanyador
                 for (rowIndex in 0..2) {
                     for (colIndex in 0..2) {
                         boardState[rowIndex][colIndex].value = R.drawable.blanc
