@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun HomeScreen() {
     var turno by remember { mutableStateOf(true) }
+    var winner by remember { mutableStateOf<Int?>(null) } // Variable per guardar el guanyador
     val img = if (turno) {
         R.drawable.mando
     } else {
@@ -37,6 +38,42 @@ fun HomeScreen() {
 
     val boardState = remember {
         List(3) { MutableList(3) { mutableStateOf(R.drawable.blanc) } }
+    }
+
+    // Funció per comprovar el guanyador
+    fun checkWinner(): Int? {
+        // Comprovem les files horitzontals
+        for (row in 0..2) {
+            if (boardState[row][0].value != R.drawable.blanc &&
+                boardState[row][0].value == boardState[row][1].value &&
+                boardState[row][1].value == boardState[row][2].value) {
+                return boardState[row][0].value // Guanyador
+            }
+        }
+
+        // Comprovem les columnes verticals
+        for (col in 0..2) {
+            if (boardState[0][col].value != R.drawable.blanc &&
+                boardState[0][col].value == boardState[1][col].value &&
+                boardState[1][col].value == boardState[2][col].value) {
+                return boardState[0][col].value // Guanyador
+            }
+        }
+
+        // Comprovem les diagonals
+        if (boardState[0][0].value != R.drawable.blanc &&
+            boardState[0][0].value == boardState[1][1].value &&
+            boardState[1][1].value == boardState[2][2].value) {
+            return boardState[0][0].value // Guanyador
+        }
+        if (boardState[0][2].value != R.drawable.blanc &&
+            boardState[0][2].value == boardState[1][1].value &&
+            boardState[1][1].value == boardState[2][0].value) {
+            return boardState[0][2].value // Guanyador
+        }
+
+        // Si no hi ha guanyador, retornem null
+        return null
     }
 
     Column(
@@ -54,14 +91,17 @@ fun HomeScreen() {
         Spacer(modifier = Modifier.size(5.dp))
 
         Text(
-            text = if (!turno) "Es el torn del robot" else "Es el teu torn",
+            text = when {
+                winner != null -> "Guanyador: ${if (winner == R.drawable.creu) "Tú" else "Robot"}"
+                !turno -> "Es el torn del robot"
+                else -> "Es el teu torn"
+            },
             fontSize = 25.sp,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
 
         Spacer(modifier = Modifier.size(50.dp))
 
-        // Taulell de joc
         Box(
             modifier = Modifier
                 .size(240.dp)
@@ -80,16 +120,13 @@ fun HomeScreen() {
                             GameCell(
                                 currentImage = boardState[rowIndex][colIndex],
                                 onCellClick = {
-                                    // Comprova si la casella està buida abans de fer el canvi
-                                    if (boardState[rowIndex][colIndex].value == R.drawable.blanc) {
-                                        // Alterna entre creu i rodona
+                                    if (winner == null && boardState[rowIndex][colIndex].value == R.drawable.blanc) {
                                         boardState[rowIndex][colIndex].value = if (turno) {
                                             R.drawable.creu
                                         } else {
                                             R.drawable.rodona
                                         }
-
-                                        // Alterna el torn
+                                        winner = checkWinner()
                                         turno = !turno
                                     }
                                 },
@@ -105,16 +142,15 @@ fun HomeScreen() {
 
         Spacer(modifier = Modifier.size(20.dp))
 
-        // Botón para reiniciar el juego
         androidx.compose.material3.Button(
             onClick = {
-                // Reinicia el estado del juego
                 for (rowIndex in 0..2) {
                     for (colIndex in 0..2) {
                         boardState[rowIndex][colIndex].value = R.drawable.blanc
                     }
                 }
-                turno = true  // Reseteamos el turno a la primera persona
+                turno = true
+                winner = null
             },
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
