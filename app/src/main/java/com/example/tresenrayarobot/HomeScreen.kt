@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun HomeScreen() {
-    var socket = ConectarSocket()  // Crear instància de la connexió amb el robot
+    var socket = ConectarSocket()
     var turno by remember { mutableStateOf(true) }
     var winner by remember { mutableStateOf<Int?>(null) }
     val img = if (turno) {
@@ -42,14 +42,12 @@ fun HomeScreen() {
         List(3) { MutableList(3) { mutableStateOf(R.drawable.blanc) } }
     }
 
-    // Funció per comprovar el guanyador
     fun checkWinner(): Int? {
-        // Comprovem les files horitzontals, verticals i diagonals (com abans)
         for (row in 0..2) {
             if (boardState[row][0].value != R.drawable.blanc &&
                 boardState[row][0].value == boardState[row][1].value &&
                 boardState[row][1].value == boardState[row][2].value) {
-                return boardState[row][0].value // Guanyador
+                return boardState[row][0].value
             }
         }
 
@@ -57,14 +55,14 @@ fun HomeScreen() {
             if (boardState[0][col].value != R.drawable.blanc &&
                 boardState[0][col].value == boardState[1][col].value &&
                 boardState[1][col].value == boardState[2][col].value) {
-                return boardState[0][col].value // Guanyador
+                return boardState[0][col].value
             }
         }
 
         if (boardState[0][0].value != R.drawable.blanc &&
             boardState[0][0].value == boardState[1][1].value &&
             boardState[1][1].value == boardState[2][2].value) {
-            return boardState[0][0].value // Guanyador
+            return boardState[0][0].value
         }
         if (boardState[0][2].value != R.drawable.blanc &&
             boardState[0][2].value == boardState[1][1].value &&
@@ -75,9 +73,7 @@ fun HomeScreen() {
         return null
     }
 
-    fun enviarPosicioAlRobot(row: Int, col: Int) {
-        socket.enviarPosicion(row, col)
-    }
+
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -131,7 +127,7 @@ fun HomeScreen() {
                                             R.drawable.rodona
                                         }
                                         // Envia la posició seleccionada al robot
-                                        enviarPosicioAlRobot(rowIndex, colIndex)
+
                                         // Comprova si hi ha guanyador
                                         winner = checkWinner()
                                         // Canvia el torn
